@@ -12,7 +12,6 @@ Building
 This is a C# project that can be opened in Visual Studio .NET 2012 and above.  It depends on the latest version of the AWS SDK, as well as ModernUI.  
 
 You can download those from their respective hosts, or you can simply fish their .dlls out of the release version of the tool, found on the [Download] page.
-tion about the IFRAME tags you'll need to actually embed Whiteboards into your site can be found in Twiddla's [API Reference]
 
 
 [S3stat]: https://www.s3stat.com/
