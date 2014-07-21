@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="SecureSetup.Pages.S3statLogin"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="389" d:DesignWidth="611.2">
+	<Grid Style="{StaticResource ContentRoot}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="6"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<ScrollViewer Margin="{StaticResource SplitLeft}">
+			<Grid Margin="50">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="30"/>
+					<RowDefinition Height="20"/>
+					<RowDefinition Height="100"/>
+				</Grid.RowDefinitions>
+				<Label Grid.Column="0" Grid.Row="0" Height="25">S3stat Username</Label>
+				<Label Grid.Column="0" Grid.Row="1" Height="25">S3stat Password</Label>
+				<TextBox Name="txtUserName" Grid.Column="1" Grid.Row="0" Height="25"/>
+				<PasswordBox Name="txtPassword"  Grid.Column="1" Grid.Row="1" Height="25" KeyDown="txtPassword_KeyDown"/>
+				<DockPanel Grid.Column="1" Grid.Row="2">
+					<CheckBox Name="cbRemember" IsChecked="True"></CheckBox>
+					<TextBlock Style="{StaticResource Small}" VerticalAlignment="Center" Margin="0">Remember This</TextBlock>
+				</DockPanel>
+				<Button Grid.Column="1" Grid.Row="3" Content="Continue" Height="50" RenderTransformOrigin="0.5,0.504" Click="Button_Click" Margin="0,15,0,0" VerticalAlignment="Top"/>
+			</Grid>
+		</ScrollViewer>
+		<GridSplitter Grid.Column="1" />
+		<ScrollViewer Grid.Column="2 " Margin="{StaticResource SplitRight}">
+			<StackPanel Margin="50">
+				<TextBlock Text="S3STAT Login" Style="{StaticResource Heading2}" />
+				<mui:BBCodeBlock BBCode="First we need to login to your S3stat account.
+	If you don't yet have an account with us, go ahead and follow this link to [url=https://www.s3stat.com/Setup/Register.aspx?from=securesetup]create a new S3stat account[/url].
+	We'll wait for you here."></mui:BBCodeBlock>
+
+			</StackPanel>
+		</ScrollViewer>
+
+	</Grid>
+</UserControl>

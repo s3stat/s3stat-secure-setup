@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="S3stat.SecureSetup.Pages.Finished"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid Style="{StaticResource ContentRoot}">
+		<ScrollViewer>
+			<StackPanel MinWidth="200">
+				<TextBlock Style="{StaticResource Heading1}">
+					All Finished
+				</TextBlock>
+				<TextBlock TextWrapping="WrapWithOverflow">
+				
+					Your changes have all been synced to S3stat.  
+					
+					You can safely close this tool now.
+					
+					We have not transmitted your AWS credentials to S3stat at any point, but if you prefer, you can safely deactivate the keys 
+					that you used during the setup process.
+					<LineBreak/>
+					<LineBreak/>
+					It may take a day or so for your first reports to arrive, depending on how
+					quickly Amazon begins delivering logfiles for your endpoints.
+					<LineBreak/>
+				</TextBlock>
+				<mui:BBCodeBlock BBCode="You can check on the status of your reports by logging in to your account at [url=https://www.s3stat.com/Customer/MyAccount.aspx]S3stat.com[/url]." />
+			</StackPanel>
+		</ScrollViewer>
+	</Grid>
+</UserControl>

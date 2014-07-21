@@ -1,0 +1,28 @@
+﻿<helpers:AppControl x:Class="S3stat.SecureSetup.Pages.EndpointSetup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+			xmlns:content="clr-namespace:S3stat.SecureSetup.Content"
+			xmlns:helpers="clr-namespace:S3stat.SecureSetup.Helpers"
+			mc:Ignorable="d" 
+             d:DesignHeight="300" Width="664.8">
+    <Grid Style="{StaticResource ContentRoot}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="6"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Margin="{StaticResource SplitLeft}">
+            <StackPanel Name="EndpointList">
+			</StackPanel>
+        </ScrollViewer>
+        <GridSplitter Grid.Column="1" />
+		<content:EndpointDetailPlaceholder Grid.Column="2" x:Name="DetailPlaceholder"></content:EndpointDetailPlaceholder>
+		<ScrollViewer Grid.Column="2" Margin="{StaticResource SplitRight}">
+			<content:EndpointDetail x:Name="Detail" Visibility="Collapsed"></content:EndpointDetail>
+        </ScrollViewer>
+		<content:EndpointDetailComplete Grid.Column="2" x:Name="DetailComplete" Visibility="Collapsed"></content:EndpointDetailComplete>
+	</Grid>
+</helpers:AppControl>

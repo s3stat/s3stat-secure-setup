@@ -1,0 +1,57 @@
+﻿<helpers:AppControl x:Class="S3stat.SecureSetup.Pages.Role"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:helpers="clr-namespace:S3stat.SecureSetup.Helpers"
+             mc:Ignorable="d" 
+             d:DesignHeight="410.2" d:DesignWidth="685.6">
+	<Grid Style="{StaticResource ContentRoot}">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="6"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<ScrollViewer Margin="{StaticResource SplitLeft}" VerticalAlignment="Top">
+			<Grid Margin="50">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="25"/>
+					<RowDefinition Height="100"/>
+				</Grid.RowDefinitions>
+				<CheckBox Grid.Column="0" Grid.Row="0" Name="cbAllow" IsChecked="False" HorizontalAlignment="Right" VerticalAlignment="Top" Click="cbAllow_Click"/>
+				<Label Grid.Column="1" Grid.Row="0" Height="25">Grant read-only access</Label>
+				<DockPanel Grid.Column="1" Grid.Row="2">
+					<TextBlock Style="{StaticResource Small}" VerticalAlignment="Center" Margin="0">Remember This</TextBlock>
+				</DockPanel>
+				<Button Grid.Column="1" Grid.Row="3" Name="btnContinue"  Content="Continue" Height="50" RenderTransformOrigin="0.5,0.504" Margin="0,15,0,0" VerticalAlignment="Top" Click="btnContinue_Click" IsEnabled="False"/>
+			</Grid>
+		</ScrollViewer>
+		<GridSplitter Grid.Column="1" />
+		<ScrollViewer Grid.Column="2 " Margin="{StaticResource SplitRight}">
+			<StackPanel Margin="50">
+				<TextBlock Text="IAM Role" Style="{StaticResource Heading2}" />
+				<TextBlock TextWrapping="WrapWithOverflow">
+					S3stat needs to set up an IAM Role for your AWS Account that will allow us to read your logfiles.
+					<LineBreak/>
+					
+				</TextBlock>
+				<mui:BBCodeBlock BBCode="An [url=http://docs.aws.amazon.com/IAM/latest/UserGuide/WorkingWithRoles.html]IAM Role[/url] can be used to grant a given AWS user access to a restricted set of permissions on your account.  In this case, we'll be granting the S3stat LogReader user read-only access to S3."></mui:BBCodeBlock>
+				<TextBlock TextWrapping="WrapWithOverflow">
+					<LineBreak/>
+					After this step is complete, you'll find a new Role named "S3statLogReaders" attached to your account.  
+					You can delete it at any time, and S3stat will simply cease reporting.  
+					<LineBreak/>
+					<LineBreak/>
+
+				</TextBlock>
+
+			</StackPanel>
+		</ScrollViewer>
+
+	</Grid>
+</helpers:AppControl>

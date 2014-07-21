@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="S3stat.SecureSetup.Content.EndpointBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+			xmlns:content="clr-namespace:S3stat.SecureSetup.Content"
+			mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Margin="0,0,5,5">
+	<UserControl.Style>
+		<Style TargetType="UserControl">
+			<Style.Triggers>
+				<Trigger Property="content:EndpointBlock.IsSelected" Value="False">
+					<Setter Property="BorderBrush" Value="#FFCCCCCC"></Setter>
+					<Setter Property="BorderThickness" Value="1"></Setter>
+					<Setter Property="Padding" Value="5,2,5,5"></Setter>
+				</Trigger>
+				<Trigger Property="content:EndpointBlock.IsS3stat" Value="False">
+					<Setter Property="Opacity" Value="0.6"></Setter>
+				</Trigger>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="#dddddd"></Setter>
+					<Setter Property="Opacity" Value="1.0"></Setter>
+				</Trigger>
+				<Trigger Property="content:EndpointBlock.IsSelected" Value="True">
+					<Setter Property="Opacity" Value="1.0"></Setter>
+					<Setter Property="Background" Value="#ffffff"></Setter>
+					<Setter Property="BorderBrush" Value="#1ba1e2"></Setter>
+					<Setter Property="BorderThickness" Value="3"></Setter>
+					<Setter Property="Padding" Value="3,0,3,3"></Setter>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</UserControl.Style>
+
+	<Grid>
+		<mui:ModernProgressRing Name="progress" IsActive="True" Width="10" Height="10" Style="{StaticResource DoubleBounceProgressRingStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,0,0"  />
+		<StackPanel>
+			<TextBlock Name="Title" Text="img.cloudmediaapp.com" Style="{StaticResource Title}" TextTrimming="CharacterEllipsis" />
+			<TextBlock Name="SubTitle"  Text="AKAI12384HDHJKS" Style="{StaticResource Small}" />
+			<DockPanel Name="Tags">
+				<TextBlock Style="{StaticResource Tag}">Cloudfront</TextBlock>
+				<TextBlock Style="{StaticResource Tag}">Not Logging</TextBlock>
+				<TextBlock Style="{StaticResource Tag}">S3stat</TextBlock>
+				<TextBlock Style="{StaticResource Tag}">Reporting</TextBlock>
+				<TextBlock Style="{StaticResource Tag}">Not Readable</TextBlock>
+			</DockPanel>
+
+		</StackPanel>
+	</Grid>
+
+</UserControl>

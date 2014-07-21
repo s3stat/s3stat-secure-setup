@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="S3stat.SecureSetup.Content.EndpointDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:lightObjects="clr-namespace:S3stat.SecureSetup.Helpers.LightObjects"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid>
+		<StackPanel MinWidth="200">
+			<!-- actual form starts here -->
+			<StackPanel x:Name="Form" Orientation="Vertical">
+				<StackPanel.Resources>
+					<Style TargetType="StackPanel">
+						<Setter Property="Orientation" Value="Horizontal" />
+						<Setter Property="Margin" Value="0,0,0,4" />
+					</Style>
+					<Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+						<Setter Property="Width" Value="100" />
+						<Setter Property="VerticalAlignment" Value="Center" />
+					</Style>
+					<Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+						<Setter Property="Height" Value="25" />
+						<Setter Property="VerticalAlignment" Value="Center" />
+					</Style>
+					<Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+						<Setter Property="Height" Value="25" />
+						<Setter Property="VerticalAlignment" Value="Center" />
+					</Style>
+					<Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+						<Setter Property="Padding" Value="0,3" />
+					</Style>
+				</StackPanel.Resources>
+				<StackPanel>
+					<TextBlock Text="{Binding Title, Mode=OneWay}" Style="{StaticResource Title}" Margin="0,0,0,8" TextTrimming="CharacterEllipsis"/>
+				</StackPanel>
+				<StackPanel>
+					<mui:BBCodeBlock Name="introLoggingNoStat"  Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is already set up for logging.  All we need to do is tell S3stat to start running reports." Margin="0,0,0,16" IsHyphenationEnabled="False"/>
+					<mui:BBCodeBlock Name="introNoLoggingNoStat" Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is not yet set up for logging.  We've suggested some defaults for log delivery, but feel free to change them.  When you click the big button below, we'll start logging and tell S3stat to start running reports." Margin="0,0,0,16"/>
+					<mui:BBCodeBlock Name="introBadLoggingStat" Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is already registered with S3stat, but it needs some fixing.  When you click the big button below, we'll ensure that logging is set up correctly." Margin="0,0,0,16"/>
+					<mui:BBCodeBlock Name="introGood" Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is already registered with S3stat, and everything seems to be set up correctly." Margin="0,0,0,16"/>
+				</StackPanel>
+				<StackPanel>
+					<Label Content="Log Bucket" Target="{Binding ElementName=selLogBucketName}"/>
+					<ComboBox x:Name="selLogBucketName" Width="150" Height="25"  Text="{Binding LogBucketName, Mode=TwoWay, ValidatesOnDataErrors=True}" Padding="7,3,8,2">
+					</ComboBox>
+				</StackPanel>
+				<StackPanel>
+					<Label Content="Log Path" Target="{Binding ElementName=txtLogPath}"/>
+					<TextBox x:Name="txtLogPath" Width="150" Text="{Binding LogPath, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+				</StackPanel>
+				<StackPanel Name="panelLogPrefix">
+					<Label Content="Log Prefix" Target="{Binding ElementName=txtLogPrefix}"/>
+					<TextBox x:Name="txtLogPrefix" Width="150" Text="{Binding LogPrefix, Mode=TwoWay, ValidatesOnDataErrors=True}" IsReadOnly="True"/>
+				</StackPanel>
+
+				<Button x:Name="btnSave" Content="Configure &amp; Save" Margin="100,16,0,0" HorizontalAlignment="Left" Height="50" Width="150" Click="btnSave_Click" />
+
+				<StackPanel Visibility="Collapsed">
+					<Grid Margin="100,16,0,0" Width="150">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="6"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Button Name="btnStopS3stat" Content="Remove S3stat" Grid.Column="0" HorizontalAlignment="Left" FontSize="8" Padding="8,4" Click="btnStopS3stat_Click" />
+						<Button Name="btnStopLogging"  Content="Stop Logging" Grid.Column="2" HorizontalAlignment="Right" FontSize="8" Padding="10,4" Click="btnStopLogging_Click" />
+					</Grid>
+				</StackPanel>
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+</UserControl>
