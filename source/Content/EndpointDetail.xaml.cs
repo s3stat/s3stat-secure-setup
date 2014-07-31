@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FirstFloor.ModernUI.Windows.Controls;
 using S3stat.SecureSetup.Helpers;
 using S3stat.SecureSetup.Helpers.LightObjects;
 using S3stat.SecureSetup.Pages;
@@ -196,18 +197,25 @@ namespace S3stat.SecureSetup.Content
 
 			Endpoint.Endpoint.S3AccountID = AppState.Account.S3AccountID;
 			var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
-			int id = s3stat.SetEndpoint(Endpoint.Endpoint);
-			if (id > 0)
+			try
 			{
-				if (Endpoint.IsS3)
+				int id = s3stat.SetEndpoint(Endpoint.Endpoint);
+				if (id > 0)
 				{
-					((CBucket)Endpoint.Endpoint).BucketID = id;
+					if (Endpoint.IsS3)
+					{
+						((CBucket) Endpoint.Endpoint).BucketID = id;
+					}
+					else
+					{
+						((CDistribution) Endpoint.Endpoint).DistributionID = id;
+					}
+					Endpoint.IsS3stat = true;
 				}
-				else
-				{
-					((CDistribution)Endpoint.Endpoint).DistributionID = id;
-				}
-				Endpoint.IsS3stat = true;
+			}
+			catch
+			{
+				ModernDialog.ShowMessage("Couldn't save to S3stat.", "Error Accessing S3stat", MessageBoxButton.OK);
 			}
 		}
 

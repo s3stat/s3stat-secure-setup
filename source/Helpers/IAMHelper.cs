@@ -58,7 +58,7 @@ namespace S3stat.SecureSetup.Helpers
 	""Action"":""sts:AssumeRole"",
 	""Condition"":{""StringEquals"":{""sts:ExternalId"":""S3stat""}}
 }]}";
-			assumeRolePolicy = assumeRolePolicy.Replace("LogReaderUserARN", LogEnabler.LogReaderUserARN);
+			assumeRolePolicy = assumeRolePolicy.Replace("S3STAT_USER_ARN", LogEnabler.LogReaderUserARN);
 
 			const string accessPolicy = @"{
 ""Statement"": [{

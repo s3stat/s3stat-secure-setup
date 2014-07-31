@@ -33,6 +33,10 @@ namespace S3stat.SecureSetup.Helpers
 		{
 			NavigateTo("/Pages/Role.xaml");
 		}
+		public void NavigateToEndpointSetup()
+		{
+			NavigateTo("/Pages/EndpointSetup.xaml");
+		}
 
 		public void EnsureAccountLoaded()
 		{

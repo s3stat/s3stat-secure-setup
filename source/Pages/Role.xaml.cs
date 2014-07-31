@@ -71,6 +71,7 @@ namespace S3stat.SecureSetup.Pages
 
 			if (AppState.Account.CanAssumeRole)
 			{
+				NavigateToEndpointSetup();
 				return;
 			}
 
@@ -86,10 +87,10 @@ namespace S3stat.SecureSetup.Pages
 				return;
 			}
 
-			var uri = new Uri("/Pages/EndpointSetup.xaml", UriKind.Relative);
-			var frame = NavigationHelper.FindFrame(null, this);
-			frame.Source = uri;
+			NavigateToEndpointSetup();
 		}
+
+
 
 		private void btnContinue_Click(object sender, RoutedEventArgs e)
 		{
