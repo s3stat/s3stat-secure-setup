@@ -149,5 +149,19 @@ namespace S3stat.SecureSetup.Helpers
 			throw caller.LastException;
 
 		}
+
+		public bool NoteException(Exception e, string context, bool handled)
+		{
+			string apiEndpoint = String.Format(@"{0}/API/NoteException.aspx", GetS3statHost());
+
+			var caller = new APICaller(apiEndpoint);
+			caller.Add("username", S3statUsername);
+			caller.Add("password", S3statPassword);
+			caller.Add("message", e.ToString());
+			caller.Add("context", context);
+			caller.Add("handled", handled ? "1" : "0");
+
+			return caller.Call();
+		}
 	}
 }

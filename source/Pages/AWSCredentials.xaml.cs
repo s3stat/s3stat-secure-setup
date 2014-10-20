@@ -66,7 +66,7 @@ namespace S3stat.SecureSetup.Pages
 			}
 			catch (Exception)
 			{
-				ModernDialog.ShowMessage("Couldn't connect to AWS with the supplied credentials", "Bad Credentials", MessageBoxButton.OK);
+				ModernDialog.ShowMessage("Couldn't connect to AWS with the supplied credentials.\r\n\r\nIf you just created them, you might need to wait a few minutes for their permissions to percolate through Amazon's system before they start working.\r\n\r\nTry grabbing a cup of coffee then hitting that Go button again.", "Bad Credentials", MessageBoxButton.OK);
 				return;
 			}
 

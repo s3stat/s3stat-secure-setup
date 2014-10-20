@@ -259,8 +259,25 @@ namespace S3stat.SecureSetup.Pages
 			UpdateEndpointEntry(endpoint);
 		}
 
+		public static void ApplyBucketLoggingPaths(CombinedEndpoint endpoint, string targetPrefix)
+		{
+			var splitter = new Regex(@"[^/]+$", RegexOptions.Compiled);
+
+			if (splitter.IsMatch(targetPrefix))
+			{
+				endpoint.LogPath = splitter.Split(targetPrefix)[0];
+				endpoint.LogPrefix = splitter.Matches(targetPrefix)[0].Value;
+			}
+			else
+			{
+				endpoint.LogPath = targetPrefix;
+				endpoint.LogPrefix = "";
+			}
+		}
+
 		private async Task GetBucketLogging(AmazonS3Client s3, CombinedEndpoint endpoint)
 		{
+			var targetPrefix = "(not set)";
 			try
 			{
 				var logging = await s3.GetBucketLoggingAsync(new GetBucketLoggingRequest() { BucketName = endpoint.BucketName });
@@ -268,18 +285,18 @@ namespace S3stat.SecureSetup.Pages
 				endpoint.IsLogging = !String.IsNullOrEmpty(logging.BucketLoggingConfig.TargetBucketName);
 				if (endpoint.IsLogging)
 				{
-					var splitter = new Regex(@"[^/]+$", RegexOptions.Compiled);
-
+					targetPrefix = logging.BucketLoggingConfig.TargetPrefix;
 					endpoint.LogBucketName = logging.BucketLoggingConfig.TargetBucketName;
-					endpoint.LogPath = splitter.Split(logging.BucketLoggingConfig.TargetPrefix)[0];
-					endpoint.LogPrefix = splitter.Matches(logging.BucketLoggingConfig.TargetPrefix)[0].Value;
+					ApplyBucketLoggingPaths(endpoint, targetPrefix);
 				}
 
 			}
 			catch (Exception e)
 			{
-				Debug.WriteLine("FAILED GetBucketLogging: " + endpoint.Id + ", " + endpoint.BucketName );
-
+				var msg = "FAILED GetBucketLogging: " + endpoint.Id + ", " + endpoint.BucketName + ", prefix: " + targetPrefix;
+				Debug.WriteLine(msg );
+				var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
+				s3stat.NoteException(e, msg, true);
 			}
 			endpoint.IsLoggingKnown = true;
 

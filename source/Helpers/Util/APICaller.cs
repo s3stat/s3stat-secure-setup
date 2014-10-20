@@ -150,7 +150,7 @@ namespace S3stat.SecureSetup.Helpers.Util
 				webRequest.Method = "POST";
 				webRequest.ContentType = "application/x-www-form-urlencoded";
 				webRequest.CookieContainer = new CookieContainer();
-				webRequest.UserAgent = @"S3stat .NET Client Library v1.0; (+http://www.s3stat.com/)";
+				webRequest.UserAgent = @"S3stat .NET Client Library v1.0; (+https://www.s3stat.com/)";
 
 				var requestWriter = new StreamWriter(webRequest.GetRequestStream());
 				requestWriter.Write(fields);

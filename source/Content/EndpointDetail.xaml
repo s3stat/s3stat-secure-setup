@@ -48,11 +48,11 @@
 				</StackPanel>
 				<StackPanel>
 					<Label Content="Log Path" Target="{Binding ElementName=txtLogPath}"/>
-					<TextBox x:Name="txtLogPath" Width="150" Text="{Binding LogPath, Mode=TwoWay, ValidatesOnDataErrors=True}"/>
+					<TextBox x:Name="txtLogPath" Width="150" Text="{Binding LogPath, Mode=TwoWay, ValidatesOnDataErrors=True}" LostFocus="txtLogPath_LostFocus"/>
 				</StackPanel>
 				<StackPanel Name="panelLogPrefix">
 					<Label Content="Log Prefix" Target="{Binding ElementName=txtLogPrefix}"/>
-					<TextBox x:Name="txtLogPrefix" Width="150" Text="{Binding LogPrefix, Mode=TwoWay, ValidatesOnDataErrors=True}" IsReadOnly="True"/>
+					<TextBox x:Name="txtLogPrefix" Width="150" Text="{Binding LogPrefix, Mode=TwoWay, ValidatesOnDataErrors=True}" LostFocus="txtLogPrefix_LostFocus"/>
 				</StackPanel>
 
 				<Button x:Name="btnSave" Content="Configure &amp; Save" Margin="100,16,0,0" HorizontalAlignment="Left" Height="50" Width="150" Click="btnSave_Click" />

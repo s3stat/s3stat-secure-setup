@@ -141,7 +141,7 @@ namespace S3stat.SecureSetup.Content
 						IsActive = true,
 						IsCompactStats = true,
 						IsLogging = true,
-						IsPrivateStats = true,
+						IsPrivateStats = false,
 						IsSelfManaged = false,
 						LogBucketName = Endpoint.LogBucketName,
 						LogPath = Endpoint.LogPath,
@@ -159,7 +159,7 @@ namespace S3stat.SecureSetup.Content
 						IsActive = true,
 						IsCompactStats = true,
 						IsLogging = true,
-						IsPrivateStats = true,
+						IsPrivateStats = false,
 						IsSelfManaged = false,
 						IsStreaming = Endpoint.IsStreaming,
 						LogBucketName = Endpoint.LogBucketName,
@@ -237,6 +237,23 @@ namespace S3stat.SecureSetup.Content
 
 		private void btnStopLogging_Click(object sender, RoutedEventArgs e)
 		{
+
+		}
+
+		private void txtLogPrefix_LostFocus(object sender, EventArgs e)
+		{
+			if (txtLogPrefix.Text.Contains("/"))
+			{
+				txtLogPrefix.Text = txtLogPrefix.Text.Replace("/", "");
+			}
+		}
+
+		private void txtLogPath_LostFocus(object sender, EventArgs e)
+		{
+			if (!txtLogPath.Text.EndsWith("/") && txtLogPath.Text != "")
+			{
+				txtLogPath.Text = txtLogPath.Text + "/";
+			}
 
 		}
 	}
