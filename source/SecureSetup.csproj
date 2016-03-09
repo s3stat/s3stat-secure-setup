@@ -74,9 +74,9 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK, Version=2.0.6.1, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
+    <Reference Include="AWSSDK, Version=2.3.23.0, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\3rdPartyTools\Amazon\AWSSDK\v2\AWSSDK.dll</HintPath>
+      <HintPath>..\..\..\..\3rdPartyTools\Amazon\AWSSDK\v2.3\Net45\AWSSDK.dll</HintPath>
     </Reference>
     <Reference Include="FirstFloor.ModernUI, Version=1.0.5.0, Culture=neutral, PublicKeyToken=2d21ec3cd074c59a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -109,6 +109,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Content\EndpointDetailEnabled.xaml.cs">
+      <DependentUpon>EndpointDetailEnabled.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\S3Helper.cs" />
     <Compile Include="Tests\CombinedEndpointTest.cs" />
     <Page Include="Assets\TextBlock.xaml">
       <SubType>Designer</SubType>
@@ -121,6 +125,10 @@
     <Page Include="Content\EndpointDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\EndpointDetailEnabled.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Content\EndpointDetailComplete.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -232,6 +240,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>

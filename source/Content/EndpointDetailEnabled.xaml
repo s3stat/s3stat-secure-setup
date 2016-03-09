@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="S3stat.SecureSetup.Content.EndpointDetailEnabled"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+	<Grid VerticalAlignment="Top">
+		<StackPanel Margin="50,0,50,50">
+			<TextBlock Text="Reporting" Style="{StaticResource Heading2}" />
+			<TextBlock TextWrapping="WrapWithOverflow" VerticalAlignment="Top">
+				This endpoint is already registered with S3stat for reporting, and everything seems to be set up correctly.
+				<LineBreak/>
+				<LineBreak/>
+				<Button x:Name="btnStop" Content="Stop Reporting" Margin="00,16,0,0" HorizontalAlignment="Left" Height="50" Width="150" Click="btnStop_Click" />
+				<LineBreak/>
+				<CheckBox x:Name="cbLogging" Margin="0,8,0,0" Content="Also stop logging. &#x0a;(Not recommended)" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+				<LineBreak/>
+				
+				<LineBreak/>
+			</TextBlock>
+		</StackPanel>
+	</Grid>
+</UserControl>

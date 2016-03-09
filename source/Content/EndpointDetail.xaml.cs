@@ -168,7 +168,6 @@ namespace S3stat.SecureSetup.Content
 				}
 			}
 
-			var s3 = setupPage.S3Client;
 			var cf = setupPage.CFClient;
 			if (!Endpoint.IsLogging ||
 				Endpoint.Endpoint.LogBucketName != Endpoint.LogBucketName
@@ -181,7 +180,15 @@ namespace S3stat.SecureSetup.Content
 				if (Endpoint.IsS3)
 				{
 					((CBucket)Endpoint.Endpoint).LogPrefix = Endpoint.LogPrefix;
-					LogEnabler.SetLoggingS3(s3, Endpoint);
+					try
+					{
+						LogEnabler.SetLoggingS3(setupPage.S3ClientDefault, Endpoint);
+					}
+					catch
+					{
+						var s3 = S3Helper.GetS3ClientForEndpoint(Endpoint, S3Helper.LogOrSource.Source);
+						LogEnabler.SetLoggingS3(s3, Endpoint);
+					}
 				}
 				else if (Endpoint.IsStreaming)
 				{
@@ -215,7 +222,7 @@ namespace S3stat.SecureSetup.Content
 			}
 			catch
 			{
-				ModernDialog.ShowMessage("Couldn't save to S3stat.", "Error Accessing S3stat", MessageBoxButton.OK);
+				ModernDialog.ShowMessage("Couldn't save to S3stat.", "Is this endpoint already set up in another account?", MessageBoxButton.OK);
 			}
 		}
 

@@ -9,7 +9,7 @@
         <ScrollViewer>
             <StackPanel MinWidth="200">
                 <TextBlock Text="ABOUT" Style="{StaticResource Heading2}" />
-                <TextBlock Text="S3stat Secure Setup Utility v1.0" Margin="0,10,0,8" TextWrapping="Wrap" />
+                <TextBlock Text="S3stat Secure Setup Utility v1.2.0" Margin="0,10,0,8" TextWrapping="Wrap" />
                 <TextBlock Text="Copyright 2014 Expat Software" Margin="0,0,0,8" TextWrapping="Wrap" />
 				
             </StackPanel>

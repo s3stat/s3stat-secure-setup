@@ -24,5 +24,6 @@
 			<content:EndpointDetail x:Name="Detail" Visibility="Collapsed"></content:EndpointDetail>
         </ScrollViewer>
 		<content:EndpointDetailComplete Grid.Column="2" x:Name="DetailComplete" Visibility="Collapsed"></content:EndpointDetailComplete>
+		<content:EndpointDetailEnabled Grid.Column="2" x:Name="DetailEnabled" Visibility="Collapsed"></content:EndpointDetailEnabled>
 	</Grid>
 </helpers:AppControl>

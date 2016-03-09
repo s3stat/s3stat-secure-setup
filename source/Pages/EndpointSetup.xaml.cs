@@ -55,7 +55,7 @@ namespace S3stat.SecureSetup.Pages
 			set { _cf = value; }
 		}
 
-		public AmazonS3Client S3Client
+		public AmazonS3Client S3ClientDefault
 		{
 			get
 			{
@@ -129,7 +129,6 @@ namespace S3stat.SecureSetup.Pages
 			_combinedEndpoints = new Dictionary<string, CombinedEndpoint>();
 			CombinedEndpoint endpoint;
 
-			var s3 = S3Client;
 			var cf = CFClient;
 			try
 			{
@@ -157,7 +156,7 @@ namespace S3stat.SecureSetup.Pages
 					};
 					_combinedEndpoints.Add(summary.Id, endpoint);
 
-					GetDistributionLogging(cf, s3, endpoint);
+					GetDistributionLogging(cf, endpoint);
 				}
 
 				var streamingDistributions = await cf.ListStreamingDistributionsAsync(new ListStreamingDistributionsRequest(), cancellationToken);
@@ -183,7 +182,7 @@ namespace S3stat.SecureSetup.Pages
 						LogPrefix = "",
 					};
 					_combinedEndpoints.Add(summary.Id, endpoint);
-					GetStreamingDistributionLogging(cf, s3, endpoint);
+					GetStreamingDistributionLogging(cf, endpoint);
 				}
 			}
 			catch (Exception)
@@ -193,7 +192,7 @@ namespace S3stat.SecureSetup.Pages
 
 			try
 			{
-				var buckets = await s3.ListBucketsAsync(new ListBucketsRequest(), cancellationToken);
+				var buckets = await S3ClientDefault.ListBucketsAsync(new ListBucketsRequest(), cancellationToken);
 				foreach (var bucketInfo in buckets.Buckets)
 				{
 					endpoint = new CombinedEndpoint()
@@ -215,7 +214,8 @@ namespace S3stat.SecureSetup.Pages
 						LogPrefix = "access_log-",
 					};
 					_combinedEndpoints.Add(bucketInfo.BucketName, endpoint);
-					GetBucketLogging(s3, endpoint);
+
+					GetBucketLogging(endpoint);
 				}
 			}
 			catch (Exception)
@@ -225,7 +225,7 @@ namespace S3stat.SecureSetup.Pages
 
 		}
 
-		private async Task GetDistributionLogging(AmazonCloudFrontClient cf, AmazonS3Client s3, CombinedEndpoint endpoint)
+		private async Task GetDistributionLogging(AmazonCloudFrontClient cf, CombinedEndpoint endpoint)
 		{
 			var config = await cf.GetDistributionConfigAsync(new GetDistributionConfigRequest() { Id = endpoint.Id });
 			endpoint.ETag = config.ETag;
@@ -242,7 +242,7 @@ namespace S3stat.SecureSetup.Pages
 			UpdateEndpointEntry(endpoint);
 		}
 
-		private async Task GetStreamingDistributionLogging(AmazonCloudFrontClient cf, AmazonS3Client s3, CombinedEndpoint endpoint)
+		private async Task GetStreamingDistributionLogging(AmazonCloudFrontClient cf, CombinedEndpoint endpoint)
 		{
 			var config = await cf.GetStreamingDistributionConfigAsync(new GetStreamingDistributionConfigRequest() { Id = endpoint.Id });
 			endpoint.ETag = config.ETag;
@@ -275,32 +275,33 @@ namespace S3stat.SecureSetup.Pages
 			}
 		}
 
-		private async Task GetBucketLogging(AmazonS3Client s3, CombinedEndpoint endpoint)
+		private async Task GetBucketLoggingInner(AmazonS3Client s3, CombinedEndpoint endpoint)
 		{
-			var targetPrefix = "(not set)";
+			var logging = await s3.GetBucketLoggingAsync(new GetBucketLoggingRequest() { BucketName = endpoint.BucketName });
+			endpoint.BucketLoggingConfig = logging.BucketLoggingConfig;
+			endpoint.IsLogging = !String.IsNullOrEmpty(logging.BucketLoggingConfig.TargetBucketName);
+			if (endpoint.IsLogging)
+			{
+				var targetPrefix = logging.BucketLoggingConfig.TargetPrefix;
+				endpoint.LogBucketName = logging.BucketLoggingConfig.TargetBucketName;
+				ApplyBucketLoggingPaths(endpoint, targetPrefix);
+			}
+
+			endpoint.IsLoggingKnown = true;
+			UpdateEndpointEntry(endpoint);
+		}
+
+		private async Task GetBucketLogging(CombinedEndpoint endpoint)
+		{
 			try
 			{
-				var logging = await s3.GetBucketLoggingAsync(new GetBucketLoggingRequest() { BucketName = endpoint.BucketName });
-				endpoint.BucketLoggingConfig = logging.BucketLoggingConfig;
-				endpoint.IsLogging = !String.IsNullOrEmpty(logging.BucketLoggingConfig.TargetBucketName);
-				if (endpoint.IsLogging)
-				{
-					targetPrefix = logging.BucketLoggingConfig.TargetPrefix;
-					endpoint.LogBucketName = logging.BucketLoggingConfig.TargetBucketName;
-					ApplyBucketLoggingPaths(endpoint, targetPrefix);
-				}
-
+				await GetBucketLoggingInner(S3ClientDefault, endpoint);
 			}
 			catch (Exception e)
 			{
-				var msg = "FAILED GetBucketLogging: " + endpoint.Id + ", " + endpoint.BucketName + ", prefix: " + targetPrefix;
-				Debug.WriteLine(msg );
-				var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
-				s3stat.NoteException(e, msg, true);
+				var s3 = S3Helper.GetS3ClientForEndpoint(endpoint, S3Helper.LogOrSource.Source);
+				GetBucketLoggingInner(s3, endpoint);
 			}
-			endpoint.IsLoggingKnown = true;
-
-			UpdateEndpointEntry(endpoint);
 		}
 
 
@@ -382,21 +383,47 @@ namespace S3stat.SecureSetup.Pages
 
 		public void ShowComplete()
 		{
-			DetailPlaceholder.Visibility = Visibility.Collapsed;
+			CollapseDetailSections();
 			DetailComplete.Visibility = Visibility.Visible;
-			Detail.Visibility = Visibility.Collapsed;
+		}
 
+		public void ShowPlaceholder()
+		{
+			CollapseDetailSections();
+			DetailPlaceholder.Visibility = Visibility.Visible;
+
+			foreach (EndpointBlock block in EndpointList.Children)
+			{
+				block.IsSelected = false;
+			}
+		}
+
+		private void CollapseDetailSections()
+		{
+			DetailPlaceholder.Visibility = Visibility.Collapsed;
+			DetailComplete.Visibility = Visibility.Collapsed;
+			DetailEnabled.Visibility = Visibility.Collapsed;
+			Detail.Visibility = Visibility.Collapsed;
 		}
 
 		void block_MouseDown(object sender, MouseButtonEventArgs e)
 		{
-			DetailPlaceholder.Visibility = Visibility.Collapsed;
-			DetailComplete.Visibility = Visibility.Collapsed;
+			CollapseDetailSections();
 
-			var block = (EndpointBlock) sender;
+			var block = (EndpointBlock)sender;
 			block.IsSelected = true;
-			Detail.Endpoint = (CombinedEndpoint)block.Tag;
-			Detail.Visibility = Visibility.Visible;
+			var endpoint = (CombinedEndpoint)block.Tag;
+
+			if (endpoint.IsS3stat)
+			{
+				DetailEnabled.Endpoint = endpoint;
+				DetailEnabled.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Detail.Endpoint = endpoint;
+				Detail.Visibility = Visibility.Visible;
+			}
 
 			foreach (EndpointBlock otherblock in EndpointList.Children)
 			{
