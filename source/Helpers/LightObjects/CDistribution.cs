@@ -40,6 +40,12 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		[XmlIgnore]
 		public SqlDateTime LastProcessDate { get; set; }
 
+		[XmlIgnore]
+		public SqlDateTime OldestLogfileDate { get; set; }
+
+		[XmlIgnore]
+		public SqlDateTime OldestProcessedDate { get; set; }
+
 		public bool IsActive { get; set; }
 
 		public bool IsLogging { get; set; }
@@ -64,6 +70,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		{
 			get { return LogPath; }
 		}
+		public string LogRegion { get; set; }
 
 
 
@@ -192,7 +199,8 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			// compact stats are always hosted:
 			if (IsCompactStats)
 			{
-				return String.Format("https://d14nptsr52j2r9.cloudfront.net/{0}", GetHostedStatPath());
+				return String.Format("https://s3.amazonaws.com/reports.s3stat.com/{0}", GetHostedStatPath());
+				//return String.Format("https://d14nptsr52j2r9.cloudfront.net/{0}", GetHostedStatPath());
 			}
 			if (StatBucketName.ToLower() == StatBucketName)
 			{
@@ -207,6 +215,10 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		{
 			var folder = IsStreaming ? "streamstats" : "cfstats";
 			return String.Format(@"{0}/{1}_{2}/{3}/", S3Account.UserID, BucketName, AWSDistributionID, folder);
+		}
+		public virtual string GetHostedExportPath()
+		{
+			return String.Format(@"{0}/{1}_{2}/export/", S3Account.UserID, BucketName, AWSDistributionID);
 		}
 
 	}

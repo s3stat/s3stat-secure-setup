@@ -185,8 +185,13 @@ namespace S3stat.SecureSetup.Pages
 					GetStreamingDistributionLogging(cf, endpoint);
 				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
+				s3stat.NoteException(e, "GetCFLogging", true);
+
+				ModernDialog.ShowMessage("Couldn't read distribution list or logging.", "Insufficient permissions on your IAM User.", MessageBoxButton.OK);
+				
 				NavigateToCredentials();
 			}
 
@@ -218,8 +223,12 @@ namespace S3stat.SecureSetup.Pages
 					GetBucketLogging(endpoint);
 				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
+				s3stat.NoteException(e, "GetS3Logging", true);
+
+				ModernDialog.ShowMessage("Couldn't read S3 bucket list or logging.", "Insufficient permissions on your IAM User.", MessageBoxButton.OK);
 				NavigateToCredentials();
 			}
 
@@ -277,6 +286,9 @@ namespace S3stat.SecureSetup.Pages
 
 		private async Task GetBucketLoggingInner(AmazonS3Client s3, CombinedEndpoint endpoint)
 		{
+			// Uncomment this to test slow connections:
+			//await Task.Delay(5000);
+
 			var logging = await s3.GetBucketLoggingAsync(new GetBucketLoggingRequest() { BucketName = endpoint.BucketName });
 			endpoint.BucketLoggingConfig = logging.BucketLoggingConfig;
 			endpoint.IsLogging = !String.IsNullOrEmpty(logging.BucketLoggingConfig.TargetBucketName);

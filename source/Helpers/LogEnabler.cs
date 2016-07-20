@@ -66,6 +66,37 @@ namespace S3stat.SecureSetup.Helpers
 				IfMatch = endpoint.ETag,
 			});
 		}
+
+		public static void StopLoggingS3(AmazonS3Client s3, CombinedEndpoint endpoint)
+		{
+			s3.PutBucketLogging(new PutBucketLoggingRequest {
+				BucketName = endpoint.BucketName,
+				LoggingConfig = new S3BucketLoggingConfig(){}
+			});
+		}
+
+		public static void StopLoggingCloudfront(AmazonCloudFrontClient cf, CombinedEndpoint endpoint)
+		{
+			endpoint.DistributionConfig.Logging.Enabled = false;
+			cf.UpdateDistribution(new UpdateDistributionRequest
+			{
+				Id = endpoint.Id,
+				DistributionConfig = endpoint.DistributionConfig,
+				IfMatch = endpoint.ETag,
+			});
+		}
+
+		public static void StopLoggingStreaming(AmazonCloudFrontClient cf, CombinedEndpoint endpoint)
+		{
+			endpoint.StreamingDistributionConfig.Logging.Enabled = false;
+			cf.UpdateStreamingDistribution(new UpdateStreamingDistributionRequest
+			{
+				Id = endpoint.Id,
+				StreamingDistributionConfig = endpoint.StreamingDistributionConfig,
+				IfMatch = endpoint.ETag,
+			});
+		}
+
 		#endregion
 
 		#region bucket policy

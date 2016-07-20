@@ -48,6 +48,27 @@ namespace S3stat.SecureSetup.Content
 			introLoggingNoStat.Visibility = Visibility.Collapsed;
 			introNoLoggingNoStat.Visibility = Visibility.Collapsed;
 			introBadLoggingStat.Visibility = Visibility.Collapsed;
+			introUnknownLogging.Visibility = Visibility.Collapsed;
+
+			this.txtLogPath.IsEnabled = true;
+			this.txtLogPrefix.IsEnabled = true;
+			this.selLogBucketName.IsEnabled = true;
+			if (!endpoint.IsLoggingKnown)
+			{
+				this.IsEnabled = false;
+				introUnknownLogging.Visibility = Visibility.Visible;
+				return;
+			}
+			else
+			{
+				this.IsEnabled = true;
+				if (endpoint.IsLogging)
+				{
+					this.txtLogPath.IsEnabled = false;
+					this.txtLogPrefix.IsEnabled = false;
+					this.selLogBucketName.IsEnabled = false;
+				}
+			}
 
 			if (endpoint.IsS3stat)
 			{

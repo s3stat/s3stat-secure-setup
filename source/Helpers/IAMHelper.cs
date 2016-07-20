@@ -56,16 +56,18 @@ namespace S3stat.SecureSetup.Helpers
 	""Effect"":""Allow"",
 	""Principal"":{""AWS"":""S3STAT_USER_ARN""},
 	""Action"":""sts:AssumeRole"",
-	""Condition"":{""StringEquals"":{""sts:ExternalId"":""S3stat""}}
+	""Condition"":{""StringEquals"":{""sts:ExternalId"":""S3STAT_ROLE_EXTERNAL_ID""}}
 }]}";
 			assumeRolePolicy = assumeRolePolicy.Replace("S3STAT_USER_ARN", LogEnabler.LogReaderUserARN);
+			assumeRolePolicy = assumeRolePolicy.Replace("S3STAT_ROLE_EXTERNAL_ID", AppState.Account.RoleExternalID);
 
 			const string accessPolicy = @"{
 ""Statement"": [{
 	""Sid"": """",
 	""Action"": [
 		""s3:GetObject"",
-		""s3:ListBucket""
+		""s3:ListBucket"",
+		""s3:GetBucketLocation""
 	],
 	""Effect"": ""Allow"",
 	""Resource"": [""arn:aws:s3:::*""]
@@ -73,21 +75,24 @@ namespace S3stat.SecureSetup.Helpers
 
 			try
 			{
-				iam.CreateRole(new CreateRoleRequest()
+				try
 				{
-					AssumeRolePolicyDocument = assumeRolePolicy,
-					RoleName = LogEnabler.LogReadersRoleName
-				});
+					iam.CreateRole(new CreateRoleRequest()
+					{
+						AssumeRolePolicyDocument = assumeRolePolicy,
+						RoleName = LogEnabler.LogReadersRoleName
+					});
+				}
+				catch (EntityAlreadyExistsException e)
+				{
+					// no worries.  already exists
+				}
 				iam.PutRolePolicy(new PutRolePolicyRequest()
 				{
 					PolicyDocument = accessPolicy,
 					PolicyName = "S3statReadAccess",
 					RoleName = LogEnabler.LogReadersRoleName
 				});
-			}
-			catch (EntityAlreadyExistsException e)
-			{
-				// no worries.  already exists
 			}
 			catch (Exception e2)
 			{

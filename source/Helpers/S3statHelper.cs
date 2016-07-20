@@ -163,5 +163,40 @@ namespace S3stat.SecureSetup.Helpers
 
 			return caller.Call();
 		}
+
+
+		/// <summary>
+		/// Push endpoint configuration info to S3stat
+		/// </summary>
+		/// <param name="endpoint"></param>
+		/// <returns></returns>
+		public bool DeleteEndpoint(ILoggable endpoint)
+		{
+			string apiEndpoint = String.Format(@"{0}/API/DeleteEndpoint.aspx", GetS3statHost());
+
+			var caller = new APICaller(apiEndpoint);
+			caller.Add("username", S3statUsername);
+			caller.Add("password", S3statPassword);
+
+			var b = endpoint as IBucket;
+			if (b != null)
+			{
+				caller.Add("bucketid", b.BucketID);
+			}
+
+			var d = endpoint as IDistribution;
+			if (d != null)
+			{
+				caller.Add("distributionid", d.DistributionID);
+			}
+
+			if (caller.Call())
+			{
+				return caller.Status == APICaller.StatusCodes.Success;
+			}
+
+			throw caller.LastException;
+
+		}
 	}
 }

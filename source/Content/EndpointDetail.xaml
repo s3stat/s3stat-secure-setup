@@ -39,6 +39,7 @@
 					<mui:BBCodeBlock Name="introLoggingNoStat"  Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is already set up for logging.  All we need to do is tell S3stat to start running reports." Margin="0,0,0,16" IsHyphenationEnabled="False"/>
 					<mui:BBCodeBlock Name="introNoLoggingNoStat" Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is not yet set up for logging.  We've suggested some defaults for log delivery, but feel free to change them.  When you click the big button below, we'll start logging and tell S3stat to start running reports." Margin="0,0,0,16"/>
 					<mui:BBCodeBlock Name="introBadLoggingStat" Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is already registered with S3stat, but it needs some fixing.  When you click the big button below, we'll ensure that logging is set up correctly." Margin="0,0,0,16"/>
+					<mui:BBCodeBlock Name="introUnknownLogging" Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="Reading logging settings..." Margin="0,0,0,16"/>
 					<mui:BBCodeBlock Name="introGood" Visibility="Collapsed" TextWrapping="Wrap" Width="300" BBCode="This endpoint is already registered with S3stat, and everything seems to be set up correctly." Margin="0,0,0,16"/>
 				</StackPanel>
 				<StackPanel>

@@ -29,6 +29,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		public string AWSAccountID { get; set; }
 
 		public bool CanAssumeRole { get; set; }
+		public string RoleExternalID { get; set; }
 
 		[XmlIgnore]
 		public List<IBucket> Buckets { get; set; }
@@ -59,6 +60,8 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			PrivateKey = account.PrivateKey;
 			PublicKey = account.PublicKey;
 			UserID = account.UserID;
+			CanAssumeRole = account.CanAssumeRole;
+			RoleExternalID = account.RoleExternalID;
 
 			Buckets = account.Buckets;
 			Distributions = account.Distributions;

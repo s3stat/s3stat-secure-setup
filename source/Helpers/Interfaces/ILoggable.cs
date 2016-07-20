@@ -32,6 +32,7 @@ namespace S3stat.SecureSetup.Helpers.Interfaces
 		string GetLocalStatPath();
 		string GetStatUrl();
 		string GetHostedStatPath();
+		string GetHostedExportPath();
 		string GetLogFilePath(DateTime dateToProcess);
 		string GetLogFileName(DateTime dateToProcess);
 		string GetLogFileFilter();

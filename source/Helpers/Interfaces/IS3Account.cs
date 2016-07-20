@@ -15,6 +15,7 @@ namespace S3stat.SecureSetup.Helpers.Interfaces
 		string AWSAccountID { get; set; }
 
 		bool CanAssumeRole { get; set; }
+		string RoleExternalID { get; set; }
 
 		List<IBucket> Buckets { get; set; }
 		List<IDistribution> Distributions { get; set; }

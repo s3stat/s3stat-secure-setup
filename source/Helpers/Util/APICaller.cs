@@ -20,6 +20,7 @@ namespace S3stat.SecureSetup.Helpers.Util
 		private Exception _lastException;
 		private int _lastErrorCode;
 		private StatusCodes _status;
+		public const int CLIENT_VERSION = 11;
 
 		public string Html
 		{
@@ -56,9 +57,10 @@ namespace S3stat.SecureSetup.Helpers.Util
 
 		public APICaller()
 		{
+			Add("clientversion", CLIENT_VERSION);
 		}
 
-		public APICaller(string endpoint)
+		public APICaller(string endpoint) : this()
 		{
 			Endpoint = endpoint;
 		}

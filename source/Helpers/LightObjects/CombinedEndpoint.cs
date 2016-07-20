@@ -39,5 +39,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		public string LogPath { get; set; }
 		public string LogPrefix { get; set; }
 		public string LogBucketName { get; set; }
+		public string LogRegion { get; set; }
+		public string SourceRegion { get; set; }
 	}
 }

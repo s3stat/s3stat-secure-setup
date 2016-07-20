@@ -61,6 +61,13 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		[XmlIgnore]
 		public SqlDateTime LastProcessDate { get; set; }
 
+		[XmlIgnore]
+		public SqlDateTime OldestLogfileDate { get; set; }
+
+		[XmlIgnore]
+		public SqlDateTime OldestProcessedDate { get; set; }
+
+
 		public DateTime LastProcessed
 		{
 			get 
@@ -86,6 +93,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		public bool IsPrivateStats { get; set; }
 
 		public bool IsCompactStats { get; set; }
+		public string LogRegion { get; set; }
 
 		[XmlIgnore]
 		public IS3Account S3Account { get; set; }
@@ -217,7 +225,8 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			// compact stats are always hosted:
 			if (IsCompactStats)
 			{
-				return String.Format("https://d14nptsr52j2r9.cloudfront.net/{0}", GetHostedStatPath());
+				return String.Format("https://s3.amazonaws.com/reports.s3stat.com/{0}", GetHostedStatPath());
+				//return String.Format("https://d14nptsr52j2r9.cloudfront.net/{0}", GetHostedStatPath());
 			}
 			if (StatBucketName.ToLower() == StatBucketName)
 			{
@@ -232,6 +241,9 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		{
 			return String.Format(@"{0}/{1}/stats/", S3Account.UserID, BucketName);
 		}
-
+		public virtual string GetHostedExportPath()
+		{
+			return String.Format(@"{0}/{1}/export/", S3Account.UserID, BucketName);
+		}
 	}
 }
