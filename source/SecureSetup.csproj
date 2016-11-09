@@ -112,6 +112,9 @@
     <Compile Include="Content\EndpointDetailEnabled.xaml.cs">
       <DependentUpon>EndpointDetailEnabled.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Content\ErrorDetail.xaml.cs">
+      <DependentUpon>ErrorDetail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\S3Helper.cs" />
     <Compile Include="Tests\CombinedEndpointTest.cs" />
     <Page Include="Assets\TextBlock.xaml">
@@ -135,6 +138,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Content\EndpointDetailPlaceholder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Content\ErrorDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FirstFloor.ModernUI.Windows.Controls;
 using FirstFloor.ModernUI.Windows.Navigation;
+using S3stat.SecureSetup.Content;
 
 namespace S3stat.SecureSetup.Pages
 {
@@ -28,6 +30,9 @@ namespace S3stat.SecureSetup.Pages
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
+			//ErrorDetail.ShowMessage("hey", "what", new Exception("Amazon.S3.AmazonS3Exception: Access Denied"));
+
+
 			var uri = new Uri("/Pages/S3statLogin.xaml", UriKind.Relative);
 			var frame = NavigationHelper.FindFrame(null, this);
 			frame.Source = uri;

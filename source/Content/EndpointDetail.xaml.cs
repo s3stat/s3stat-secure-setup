@@ -241,9 +241,10 @@ namespace S3stat.SecureSetup.Content
 					Endpoint.IsS3stat = true;
 				}
 			}
-			catch
+			catch (Exception e)
 			{
-				ModernDialog.ShowMessage("Couldn't save to S3stat.", "Is this endpoint already set up in another account?", MessageBoxButton.OK);
+				AppState.NoteException(e, "SaveEndpoint", true);
+				ErrorDetail.ShowMessage("Couldn't save to S3stat.", "Is this endpoint already set up in another account?", e, "SaveEndpoint");
 			}
 		}
 

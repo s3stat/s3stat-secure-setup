@@ -19,9 +19,11 @@ namespace S3stat.SecureSetup.Helpers
 		public static string AWSAccountID { get; set; }
 		public static bool RememberS3statLogin { get; set; }
 		public static bool RememberAWSCredentials { get; set; }
+		public static bool NoCloudfrontSubscription { get; set; }
 		public static CAccount Account { get; set; }
 
 		private const string ConfigFileName = "s3stat.config";
+		private const string ErrorLogFileName = "s3stat_error.txt";
 
 		static AppState()
 		{
@@ -76,6 +78,24 @@ namespace S3stat.SecureSetup.Helpers
 			}
 
 			return sBuilder.ToString();
+		}
+
+		public static void NoteException(Exception e, string context, bool handled)
+		{
+			IsolatedStorageFile isoStore = IsolatedStorageFile.GetStore(
+				IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null);
+
+			using (var writer = new StreamWriter(new IsolatedStorageFileStream(ErrorLogFileName, FileMode.Append, FileAccess.Write, isoStore)))
+			{
+				writer.WriteLine("{0}, {1}, {2}", DateTime.Now, context, handled);
+				writer.WriteLine(e);
+				writer.WriteLine();
+				writer.Close();
+			}
+
+			
+			var s3stat = new S3statHelper(UserName, Password);
+			s3stat.NoteException(e, context, handled);
 		}
 	}
 

@@ -63,12 +63,15 @@ namespace S3stat.SecureSetup.Content
 				}
 				else
 				{
-					ModernDialog.ShowMessage("Credential Error.", "If this problem persists, please contact S3stat support.", MessageBoxButton.OK);
+					var e = new Exception("Failed to stop reporting for endpoint on S3stat");
+					AppState.NoteException(e, "StopReporting", false);
+					ErrorDetail.ShowMessage("Credential Error.", "If this problem persists, please contact S3stat support.", e, "StopReporting");
 				}
 			}
-			catch
+			catch (Exception e)
 			{
-				ModernDialog.ShowMessage("Couldn't delete.", "If this problem persists, please contact S3stat support.", MessageBoxButton.OK);
+				AppState.NoteException(e, "StopReporting", false);
+				ErrorDetail.ShowMessage("Couldn't stop reporting.", "If this problem persists, please contact S3stat support.", e, "StopReporting");
 			}
 
 		}
@@ -98,10 +101,9 @@ namespace S3stat.SecureSetup.Content
 			}
 			catch (Exception e)
 			{
-				var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
-				s3stat.NoteException(e, "StopLogging", true);
+				AppState.NoteException(e, "StopLogging", false);
 
-				ModernDialog.ShowMessage("Couldn't stop logging.", "Insufficient permission.  You can try again from your AWS Console.", MessageBoxButton.OK);
+				ErrorDetail.ShowMessage("Couldn't stop logging.", "Insufficient permission.  You can try again from your AWS Console.", e, "StopLogging");
 
 			}
 		}

@@ -18,6 +18,7 @@ namespace S3stat.SecureSetup.Helpers.Interfaces
 		string FtpPassword { get; set; }
 		bool IsActive { get; set; }
 		bool IsLogging { get; set; }
+		bool IsReadable { get; set; }
 
 		void SetDefaults();
 	}

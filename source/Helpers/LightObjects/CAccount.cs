@@ -23,6 +23,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		public string Handle { get; set; }
 
 		public bool IsActive { get; set; }
+		public bool IsValid { get; set; }
 
 		public DateTime CreateDate { get; set; }
 
@@ -62,6 +63,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			UserID = account.UserID;
 			CanAssumeRole = account.CanAssumeRole;
 			RoleExternalID = account.RoleExternalID;
+			IsValid = account.IsValid;
 
 			Buckets = account.Buckets;
 			Distributions = account.Distributions;

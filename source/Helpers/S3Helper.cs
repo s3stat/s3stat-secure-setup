@@ -58,8 +58,7 @@ namespace S3stat.SecureSetup.Helpers
 				}
 				catch (Exception e)
 				{
-					var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
-					s3stat.NoteException(e, "StopLogging", true);
+					AppState.NoteException(e, "GetRegionList", true);
 				}
 			}
 

@@ -13,6 +13,7 @@ namespace S3stat.SecureSetup.Helpers.Interfaces
 		bool IsEC2 { get; set; }
 		bool IsEU { get; set; }
 		bool IsStreaming { get; set; }
+		bool IsReadable { get; set; }
 
 		void SetDefaults();
 	}

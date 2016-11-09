@@ -42,6 +42,7 @@ namespace S3stat.SecureSetup.Helpers
 			}
 			catch (Exception ex)
 			{
+				AppState.NoteException(ex, "SerializeBinary", false);
 				throw new Exception("could not serialize this object:\n" + obj + "\n\n" + ex);
 			}
 		}
@@ -64,6 +65,7 @@ namespace S3stat.SecureSetup.Helpers
 			}
 			catch (Exception ex)
 			{
+				AppState.NoteException(ex, "SerializeToFile", false);
 				throw new Exception("could not serialize this object:\n" + obj + "\n\n" + ex);
 			}
 		}
@@ -86,8 +88,9 @@ namespace S3stat.SecureSetup.Helpers
 			{
 				return xs.Deserialize(buffer);
 			}
-			catch
+			catch (Exception ex)
 			{
+				AppState.NoteException(ex, "DeSerialize", false);
 				throw new Exception("could not deserialize this string:\n" + xml);
 			}
 		}
@@ -109,8 +112,9 @@ namespace S3stat.SecureSetup.Helpers
 			{
 				return formatter.Deserialize(buffer);
 			}
-			catch
+			catch (Exception ex)
 			{
+				AppState.NoteException(ex, "DeSerializeBinary", false);
 				throw new Exception("could not deserialize this string:\n" + data);
 			}
 		}
@@ -134,12 +138,14 @@ namespace S3stat.SecureSetup.Helpers
 					return obj;
 				}
 			}
-			catch (FileNotFoundException)
+			catch (FileNotFoundException e1)
 			{
+				AppState.NoteException(e1, "DeSerializeFromFile", false);
 				throw new FileNotFoundException("could not find file:" + fileName, fileName);
 			}
 			catch (Exception e)
 			{
+				AppState.NoteException(e, "DeSerializeFromFile", false);
 				throw new Exception("could not deserialize this file:"
 				                    + fileName
 				                    + Environment.NewLine + e);

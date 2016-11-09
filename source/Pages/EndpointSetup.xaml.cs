@@ -129,72 +129,6 @@ namespace S3stat.SecureSetup.Pages
 			_combinedEndpoints = new Dictionary<string, CombinedEndpoint>();
 			CombinedEndpoint endpoint;
 
-			var cf = CFClient;
-			try
-			{
-				var distributions = await cf.ListDistributionsAsync(new ListDistributionsRequest(), cancellationToken);
-				foreach (var summary in distributions.DistributionList.Items)
-				{
-					var origin = summary.Origins.Items[0];
-					endpoint = new CombinedEndpoint() { 
-						Id = summary.Id,
-						Type = CombinedEndpoint.EndpointType.Cloudfront,
-						BucketName = origin.DomainName,
-						Title = StripBucketName(origin.DomainName),
-						Subtitle = summary.Id,
-						IsCloudfront = true,
-						HasReports = false,
-						IsS3 = false,
-						IsS3stat = false,
-						IsStreaming = false,
-						IsLoggingKnown = false,
-						IsS3statKnown = false,
-						LogBucketName = StripBucketName(origin.DomainName),
-						LogPath = "cflog/",
-						LogPrefix = "",
-						
-					};
-					_combinedEndpoints.Add(summary.Id, endpoint);
-
-					GetDistributionLogging(cf, endpoint);
-				}
-
-				var streamingDistributions = await cf.ListStreamingDistributionsAsync(new ListStreamingDistributionsRequest(), cancellationToken);
-				foreach (var summary in streamingDistributions.StreamingDistributionList.Items)
-				{
-					var origin = summary.S3Origin;
-					endpoint = new CombinedEndpoint()
-					{
-						Id = summary.Id,
-						Type = CombinedEndpoint.EndpointType.Streaming,
-						BucketName = origin.DomainName,
-						Title = StripBucketName(origin.DomainName),
-						Subtitle = summary.Id,
-						IsCloudfront = true,
-						HasReports = false,
-						IsS3 = false,
-						IsS3stat = false,
-						IsStreaming = true,
-						IsLoggingKnown = false,
-						IsS3statKnown = false,
-						LogBucketName = StripBucketName(origin.DomainName),
-						LogPath = "streamlog/",
-						LogPrefix = "",
-					};
-					_combinedEndpoints.Add(summary.Id, endpoint);
-					GetStreamingDistributionLogging(cf, endpoint);
-				}
-			}
-			catch (Exception e)
-			{
-				var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
-				s3stat.NoteException(e, "GetCFLogging", true);
-
-				ModernDialog.ShowMessage("Couldn't read distribution list or logging.", "Insufficient permissions on your IAM User.", MessageBoxButton.OK);
-				
-				NavigateToCredentials();
-			}
-
 			try
 			{
 				var buckets = await S3ClientDefault.ListBucketsAsync(new ListBucketsRequest(), cancellationToken);
@@ -225,12 +159,96 @@ namespace S3stat.SecureSetup.Pages
 			}
 			catch (Exception e)
 			{
-				var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
-				s3stat.NoteException(e, "GetS3Logging", true);
+				AppState.NoteException(e, "GetS3Logging", true);
 
-				ModernDialog.ShowMessage("Couldn't read S3 bucket list or logging.", "Insufficient permissions on your IAM User.", MessageBoxButton.OK);
+				ErrorDetail.ShowMessage("Couldn't read S3 bucket list or logging.", "Insufficient permissions on your IAM User.", e, "GetS3Logging");
 				NavigateToCredentials();
 			}
+
+
+			var cf = CFClient;
+			try
+			{
+				var distributions = await cf.ListDistributionsAsync(new ListDistributionsRequest(), cancellationToken);
+				foreach (var summary in distributions.DistributionList.Items)
+				{
+					var origin = summary.Origins.Items[0];
+					endpoint = new CombinedEndpoint()
+					{
+						Id = summary.Id,
+						Type = CombinedEndpoint.EndpointType.Cloudfront,
+						BucketName = origin.DomainName,
+						Title = StripBucketName(origin.DomainName),
+						Subtitle = summary.Id,
+						IsCloudfront = true,
+						HasReports = false,
+						IsS3 = false,
+						IsS3stat = false,
+						IsStreaming = false,
+						IsLoggingKnown = false,
+						IsS3statKnown = false,
+						LogBucketName = StripBucketName(origin.DomainName),
+						LogPath = "cflog/",
+						LogPrefix = "",
+
+					};
+					_combinedEndpoints.Add(summary.Id, endpoint);
+
+					GetDistributionLogging(cf, endpoint);
+				}
+
+				var streamingDistributions =
+					await cf.ListStreamingDistributionsAsync(new ListStreamingDistributionsRequest(), cancellationToken);
+				foreach (var summary in streamingDistributions.StreamingDistributionList.Items)
+				{
+					var origin = summary.S3Origin;
+					endpoint = new CombinedEndpoint()
+					{
+						Id = summary.Id,
+						Type = CombinedEndpoint.EndpointType.Streaming,
+						BucketName = origin.DomainName,
+						Title = StripBucketName(origin.DomainName),
+						Subtitle = summary.Id,
+						IsCloudfront = true,
+						HasReports = false,
+						IsS3 = false,
+						IsS3stat = false,
+						IsStreaming = true,
+						IsLoggingKnown = false,
+						IsS3statKnown = false,
+						LogBucketName = StripBucketName(origin.DomainName),
+						LogPath = "streamlog/",
+						LogPrefix = "",
+					};
+					_combinedEndpoints.Add(summary.Id, endpoint);
+					GetStreamingDistributionLogging(cf, endpoint);
+				}
+			}
+			catch (AmazonCloudFrontException cfe)
+			{
+				if (cfe.Message.Contains("The AWS Access Key Id needs a subscription for the service"))
+				{
+					// No worries then.  They haven't signed up for CF, so let's stop asking about it.
+					AppState.NoCloudfrontSubscription = true;
+				}
+				else
+				{
+					AppState.NoteException(cfe, "GetCFLoggingCFE", true);
+					ErrorDetail.ShowMessage("Couldn't read distribution list or logging.", "Insufficient permissions on your IAM User.",
+						cfe, "GetCFLoggingCFE");
+					NavigateToCredentials();
+
+				}
+			}
+			catch (Exception e)
+			{
+				AppState.NoteException(e, "GetCFLogging", true);
+				ErrorDetail.ShowMessage("Couldn't read distribution list or logging.", "Insufficient permissions on your IAM User.",
+					e, "GetCFLogging");
+
+				NavigateToCredentials();
+			}
+
 
 		}
 
@@ -333,6 +351,7 @@ namespace S3stat.SecureSetup.Pages
 			}
 			catch (Exception e)
 			{
+				AppState.NoteException(e, "IntegrateS3statEndpoints", true);
 				NavigateToLogin();
 				return;
 			}

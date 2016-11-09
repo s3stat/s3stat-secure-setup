@@ -18,6 +18,7 @@ using Amazon.S3;
 using FirstFloor.ModernUI.Windows;
 using FirstFloor.ModernUI.Windows.Controls;
 using FirstFloor.ModernUI.Windows.Navigation;
+using S3stat.SecureSetup.Content;
 using S3stat.SecureSetup.Helpers;
 using S3stat.SecureSetup.Helpers.LightObjects;
 using FragmentNavigationEventArgs = FirstFloor.ModernUI.Windows.Navigation.FragmentNavigationEventArgs;
@@ -64,16 +65,18 @@ namespace S3stat.SecureSetup.Pages
 				AppState.AWSSecretKey = txtAWSSecretKey.Text;
 				AppState.RememberAWSCredentials = cbRemember.IsChecked.GetValueOrDefault(true);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				ModernDialog.ShowMessage("Couldn't connect to AWS with the supplied credentials.\r\n\r\nIf you just created them, you might need to wait a few minutes for their permissions to percolate through Amazon's system before they start working.\r\n\r\nTry grabbing a cup of coffee then hitting that Go button again.", "Bad Credentials", MessageBoxButton.OK);
+				AppState.NoteException(e, "VerifyAWSCredentials", false);
+				ErrorDetail.ShowMessage("Couldn't connect to AWS with the supplied credentials.  The link below should help troubleshoot this."
+					, "Bad Credentials", e, "VerifyAWSCredentials");
 				return;
 			}
 
 			AppState.AWSAccountID = IAMHelper.GetAccountID();
 			if (String.IsNullOrEmpty(AppState.AWSAccountID))
 			{
-				ModernDialog.ShowMessage("Couldn't retrieve AWS AccountID using the supplied credentials", "Bad Credentials", MessageBoxButton.OK);
+				ErrorDetail.ShowMessage("Couldn't retrieve AWS AccountID using the supplied credentials", "Bad Credentials");
 				return;
 			}
 			AppState.Save();

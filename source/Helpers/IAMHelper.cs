@@ -75,29 +75,22 @@ namespace S3stat.SecureSetup.Helpers
 
 			try
 			{
-				try
+				iam.CreateRole(new CreateRoleRequest()
 				{
-					iam.CreateRole(new CreateRoleRequest()
-					{
-						AssumeRolePolicyDocument = assumeRolePolicy,
-						RoleName = LogEnabler.LogReadersRoleName
-					});
-				}
-				catch (EntityAlreadyExistsException e)
-				{
-					// no worries.  already exists
-				}
-				iam.PutRolePolicy(new PutRolePolicyRequest()
-				{
-					PolicyDocument = accessPolicy,
-					PolicyName = "S3statReadAccess",
+					AssumeRolePolicyDocument = assumeRolePolicy,
 					RoleName = LogEnabler.LogReadersRoleName
 				});
 			}
-			catch (Exception e2)
+			catch (EntityAlreadyExistsException e)
 			{
-				return false;
+				// no worries.  already exists
 			}
+			iam.PutRolePolicy(new PutRolePolicyRequest()
+			{
+				PolicyDocument = accessPolicy,
+				PolicyName = "S3statReadAccess",
+				RoleName = LogEnabler.LogReadersRoleName
+			});
 
 			return true;
 		}

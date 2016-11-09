@@ -22,6 +22,7 @@ namespace S3stat.SecureSetup.Helpers.Interfaces
 		bool UseStoneStepsWebalizer { get; set; }
 		bool IsPrivateStats { get; set; }
 		bool IsCompactStats { get; set; }
+		bool IsReadable { get; set; }
 		int StatusID { get; set; }
 		SqlDateTime LastProcessDate { get; set; }
 

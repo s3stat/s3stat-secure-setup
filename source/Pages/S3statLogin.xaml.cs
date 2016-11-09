@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FirstFloor.ModernUI.Windows.Controls;
 using FirstFloor.ModernUI.Windows.Navigation;
+using S3stat.SecureSetup.Content;
 using S3stat.SecureSetup.Helpers;
 
 namespace SecureSetup.Pages
@@ -52,7 +53,7 @@ namespace SecureSetup.Pages
 			}
 			else
 			{
-				ModernDialog.ShowMessage("Couldn't find an S3stat account with this username and password", "Login Failed", MessageBoxButton.OK);
+				ErrorDetail.ShowMessage("Couldn't find an S3stat account with this username and password", "Login Failed");
 			}
 		}
 

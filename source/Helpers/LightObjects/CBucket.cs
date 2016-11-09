@@ -93,6 +93,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		public bool IsPrivateStats { get; set; }
 
 		public bool IsCompactStats { get; set; }
+		public bool IsReadable { get; set; }
 		public string LogRegion { get; set; }
 
 		[XmlIgnore]
@@ -134,6 +135,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			UseStoneStepsWebalizer = bucket.UseStoneStepsWebalizer;
 			IsPrivateStats = bucket.IsPrivateStats;
 			IsCompactStats = bucket.IsCompactStats;
+			IsReadable = bucket.IsReadable;
 		}
 
 
@@ -146,6 +148,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			LogOutPath = @"log/";
 
 			IsActive = true;
+			IsReadable = true;
 			UploadProcessedLogs = false;
 			UploadReports = true;
 			FtpProcessedLogs = false;

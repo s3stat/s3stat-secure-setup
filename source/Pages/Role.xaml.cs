@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using FirstFloor.ModernUI.Windows;
 using FirstFloor.ModernUI.Windows.Controls;
 using FirstFloor.ModernUI.Windows.Navigation;
+using S3stat.SecureSetup.Content;
 using S3stat.SecureSetup.Helpers;
 using S3stat.SecureSetup.Helpers.LightObjects;
 using NavigationEventArgs = FirstFloor.ModernUI.Windows.Navigation.NavigationEventArgs;
@@ -57,15 +58,23 @@ namespace S3stat.SecureSetup.Pages
 				return;
 			}
 
-			cbAllow.IsChecked = AppState.Account.CanAssumeRole;
-			btnContinue.IsEnabled = AppState.Account.CanAssumeRole;
+			if (AppState.Account != null)
+			{
+				cbAllow.IsChecked = AppState.Account.CanAssumeRole;
+				btnContinue.IsEnabled = AppState.Account.CanAssumeRole;
+			}
 		}
 
 		private void Go()
 		{
-			if (!IAMHelper.CreateLogReaderRole())
+			try
 			{
-				ModernDialog.ShowMessage("Couldn't create S3statLogReaders Role with the supplied credentials.  Check to ensure your IAM policy includes both iam:CreateRole and iam:PutRolePolicy permissions", "Insufficient Permission", MessageBoxButton.OK);
+				IAMHelper.CreateLogReaderRole();
+			}
+			catch (Exception e)
+			{
+				AppState.NoteException(e, "CreateLogReaderRole", false);
+				ErrorDetail.ShowMessage("Couldn't create S3statLogReaders Role with the supplied credentials.  Check to ensure your IAM policy includes both iam:CreateRole and iam:PutRolePolicy permissions", "Insufficient Permission", e, "CreateLogReaderRole");
 				return;
 			}
 
@@ -81,9 +90,10 @@ namespace S3stat.SecureSetup.Pages
 			{
 				s3stat.SetS3statAccount(AppState.Account);
 			}
-			catch
+			catch (Exception e)
 			{
-				ModernDialog.ShowMessage("Couldn't access your S3stat account with the supplied credentials.  Check to ensure your username and password are correct.", "Error Accessing S3stat", MessageBoxButton.OK);
+				AppState.NoteException(e, "SetS3Account", false);
+				ErrorDetail.ShowMessage("Couldn't access your S3stat account with the supplied credentials.  Check to ensure your username and password are correct.", "Error Accessing S3stat", e, "SetS3Account");
 				return;
 			}
 

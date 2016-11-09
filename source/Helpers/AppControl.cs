@@ -58,6 +58,7 @@ namespace S3stat.SecureSetup.Helpers
 			}
 			catch (Exception e)
 			{
+				AppState.NoteException(e, "EnsureAccountLoaded", true);
 				NavigateToLogin();
 			}
 		}

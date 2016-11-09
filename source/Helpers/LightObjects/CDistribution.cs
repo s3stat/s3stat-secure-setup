@@ -55,6 +55,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		public bool IsEC2 { get; set; }
 
 		public bool IsStreaming { get; set; }
+		public bool IsReadable { get; set; }
 
 		public bool UploadReports
 		{
@@ -127,6 +128,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			UseStoneStepsWebalizer = dist.UseStoneStepsWebalizer;
 			IsPrivateStats = dist.IsPrivateStats;
 			IsCompactStats = dist.IsCompactStats;
+			IsReadable = dist.IsReadable;
 		}
 
 
@@ -136,6 +138,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 			StatPath = @"cfstats/";
 
 			IsActive = true;
+			IsReadable = true;
 		}
 
 		private string WinPath(string unixPath)
