@@ -78,13 +78,14 @@ namespace S3stat.SecureSetup.Pages
 				return;
 			}
 
-			if (AppState.Account.CanAssumeRole)
+			if (AppState.Account.CanAssumeRole && AppState.Account.CanCloudWatch)
 			{
 				NavigateToEndpointSetup();
 				return;
 			}
 
 			AppState.Account.CanAssumeRole = true;
+			AppState.Account.CanCloudWatch = true;
 			var s3stat = new S3statHelper(AppState.UserName, AppState.Password);
 			try
 			{

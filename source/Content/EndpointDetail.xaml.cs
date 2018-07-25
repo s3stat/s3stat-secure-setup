@@ -244,7 +244,7 @@ namespace S3stat.SecureSetup.Content
 			catch (Exception e)
 			{
 				AppState.NoteException(e, "SaveEndpoint", true);
-				ErrorDetail.ShowMessage("Couldn't save to S3stat.", "Is this endpoint already set up in another account?", e, "SaveEndpoint");
+				ErrorDetail.ShowMessage("Is this endpoint already set up in another account?", "Couldn't save to S3stat.", e, "SaveEndpoint");
 			}
 		}
 

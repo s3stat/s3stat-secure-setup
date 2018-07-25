@@ -20,7 +20,7 @@ namespace S3stat.SecureSetup.Helpers.Util
 		private Exception _lastException;
 		private int _lastErrorCode;
 		private StatusCodes _status;
-		public const int CLIENT_VERSION = 11;
+		public const int CLIENT_VERSION = 12;
 
 		public string Html
 		{

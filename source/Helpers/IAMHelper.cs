@@ -45,6 +45,36 @@ namespace S3stat.SecureSetup.Helpers
 			return "";
 		}
 
+		public static string GetRoleAccessPolicy(bool includeCloudWatchPermission)
+		{
+			string s3Statement = @"{
+	""Sid"": ""S3ReadOnly"",
+	""Action"": [
+		""s3:GetObject"",
+		""s3:ListBucket"",
+		""s3:GetBucketLocation""
+	],
+	""Effect"": ""Allow"",
+	""Resource"": [""arn:aws:s3:::*""]
+}";
+
+			string cloudWatchStatement = @", {
+	""Sid"": ""AllowCloudWatchBucketInfo"",
+	""Action"": [
+		""cloudwatch:GetMetricStatistics""
+	],
+	""Effect"": ""Allow"",
+	""Resource"": [""*""]
+}";
+
+			string accessPolicy = @"{""Statement"": ["
+				+ s3Statement
+				+ (includeCloudWatchPermission ? cloudWatchStatement : "")
+			+ "]}";
+
+			return accessPolicy;
+		}
+
 		public static bool CreateLogReaderRole()
 		{
 			var iam = new AmazonIdentityManagementServiceClient(AppState.AWSAccessKey, AppState.AWSSecretKey);
@@ -61,18 +91,6 @@ namespace S3stat.SecureSetup.Helpers
 			assumeRolePolicy = assumeRolePolicy.Replace("S3STAT_USER_ARN", LogEnabler.LogReaderUserARN);
 			assumeRolePolicy = assumeRolePolicy.Replace("S3STAT_ROLE_EXTERNAL_ID", AppState.Account.RoleExternalID);
 
-			const string accessPolicy = @"{
-""Statement"": [{
-	""Sid"": """",
-	""Action"": [
-		""s3:GetObject"",
-		""s3:ListBucket"",
-		""s3:GetBucketLocation""
-	],
-	""Effect"": ""Allow"",
-	""Resource"": [""arn:aws:s3:::*""]
-}]}";
-
 			try
 			{
 				iam.CreateRole(new CreateRoleRequest()
@@ -85,12 +103,32 @@ namespace S3stat.SecureSetup.Helpers
 			{
 				// no worries.  already exists
 			}
-			iam.PutRolePolicy(new PutRolePolicyRequest()
+
+			// Attempt to grant CloudWatch Access.  Fall back to not if we're
+			// using an older IAM policy that predates us adding that permission.
+			try
 			{
-				PolicyDocument = accessPolicy,
-				PolicyName = "S3statReadAccess",
-				RoleName = LogEnabler.LogReadersRoleName
-			});
+				iam.PutRolePolicy(new PutRolePolicyRequest()
+				{
+					PolicyDocument = GetRoleAccessPolicy(true),
+					PolicyName = "S3statReadAccess",
+					RoleName = LogEnabler.LogReadersRoleName
+				});
+			}
+			catch (Exception e)
+			{
+				// 20170615: AWS doesn't appear to throw when creating a role with more permissions than
+				// the creating user.  That's unexpected, so we'll trap it if it ever happens.
+				AppState.NoteException(e, "PutRolePolicyRequest with CloudWatch", true);
+				iam.PutRolePolicy(new PutRolePolicyRequest()
+				{
+					PolicyDocument = GetRoleAccessPolicy(false),
+					PolicyName = "S3statReadAccess",
+					RoleName = LogEnabler.LogReadersRoleName
+				});
+			}
+
+
 
 			return true;
 		}

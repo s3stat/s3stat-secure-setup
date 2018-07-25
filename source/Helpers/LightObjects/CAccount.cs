@@ -30,6 +30,7 @@ namespace S3stat.SecureSetup.Helpers.LightObjects
 		public string AWSAccountID { get; set; }
 
 		public bool CanAssumeRole { get; set; }
+		public bool CanCloudWatch { get; set; }
 		public string RoleExternalID { get; set; }
 
 		[XmlIgnore]

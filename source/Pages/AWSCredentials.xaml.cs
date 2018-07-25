@@ -61,6 +61,8 @@ namespace S3stat.SecureSetup.Pages
 			try
 			{
 				s3.ListBuckets();
+				txtAWSAccessKey.Text = txtAWSAccessKey.Text.Trim();
+				txtAWSSecretKey.Text = txtAWSSecretKey.Text.Trim();
 				AppState.AWSAccessKey = txtAWSAccessKey.Text;
 				AppState.AWSSecretKey = txtAWSSecretKey.Text;
 				AppState.RememberAWSCredentials = cbRemember.IsChecked.GetValueOrDefault(true);
