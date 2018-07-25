@@ -3,7 +3,7 @@ S3stat Secure Setup
 
 This is a tool to configure Cloudfront and Amazon S3 endpoints for logging and reporting with [S3stat].
 
-For more information about the tool, visit the [Download] page.
+For more information about the tool, visit the [Download] page.  There is also an [Electron Version] of this tool that runs on Mac and Linux machines.
 
 
 Building
@@ -16,3 +16,4 @@ You can download those from their respective hosts, or you can simply fish their
 
 [S3stat]: https://www.s3stat.com/
 [Download]: https://www.s3stat.com/Setup/Download.aspx
+[Electron Version]: https://github.com/s3stat/s3stat-secure-setup-universal
